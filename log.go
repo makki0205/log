@@ -30,7 +30,7 @@ func Recovery() gin.HandlerFunc {
 	return RecoveryWithWriter(gin.DefaultErrorWriter)
 }
 
-func Err(err error) {
+func Err(err interface{}) {
 	if err != nil {
 		errs := fmt.Sprintf("[%s]\n%+v", config.GoEnv, err)
 		fmt.Println(errs)
