@@ -30,6 +30,13 @@ func Recovery() gin.HandlerFunc {
 	return RecoveryWithWriter(gin.DefaultErrorWriter)
 }
 
+func Err(err error) {
+	if err != nil {
+		errs := fmt.Sprintf("[%s]\n%+v", config.GoEnv, err)
+		fmt.Println(errs)
+		SendSlack(errs)
+	}
+}
 func RecoveryWithWriter(out io.Writer) gin.HandlerFunc {
 	var logger *log.Logger
 	if out != nil {
