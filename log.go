@@ -32,7 +32,7 @@ func Recovery() gin.HandlerFunc {
 
 func Err(err interface{}) {
 	if err != nil {
-		errs := fmt.Sprintf("[%s]\n%+v", config.GoEnv, err)
+		errs := fmt.Sprintf("[%s][Recovery] panic recovered:\n%s\n%s\n%s%s", config.GoEnv, err, stack(3), reset)
 		fmt.Println(errs)
 		SendSlack(errs)
 	}
