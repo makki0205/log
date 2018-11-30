@@ -25,14 +25,20 @@ var (
 )
 var reset = string([]byte{27, 91, 48, 109})
 
+var ServiceName = ""
+
 // Recovery returns a middleware that recovers from any panics and writes a 500 if there was one.
 func Recovery() gin.HandlerFunc {
 	return RecoveryWithWriter(gin.DefaultErrorWriter)
 }
 
-func Err(err interface{}) {
+func Err(err interface{}, arg ...string) {
 	if err != nil {
-		errs := fmt.Sprintf("[%s][Recovery] panic recovered:\n%s\n%s\n%s%s", config.GoEnv, err, stack(3), reset)
+		errs := fmt.Sprintf("[%s][%s][Recovery]", ServiceName, config.GoEnv)
+		for _, value := range arg {
+			errs += fmt.Sprintf("[%s]", value)
+		}
+		errs += fmt.Sprintf("\npanic recovered:\n%s\n%s%s", err, stack(3), reset)
 		fmt.Println(errs)
 		SendSlack(errs)
 	}
@@ -49,7 +55,7 @@ func RecoveryWithWriter(out io.Writer) gin.HandlerFunc {
 					stack := stack(3)
 					httprequest, _ := httputil.DumpRequest(c.Request, false)
 					logger.Printf("[Recovery] panic recovered:\n%s\n%s\n%s%s", string(httprequest), err, stack, reset)
-					SendSlack(fmt.Sprintf("[%s][Recovery] panic recovered:\n%s\n%s\n%s%s", config.GoEnv, string(httprequest), err, stack, reset))
+					SendSlack(fmt.Sprintf("[%s][%s][Recovery] panic recovered:\n%s\n%s\n%s%s", ServiceName, config.GoEnv, string(httprequest), err, stack, reset))
 				}
 				c.AbortWithStatus(500)
 			}
