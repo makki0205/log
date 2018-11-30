@@ -38,7 +38,7 @@ func Err(err interface{}, arg ...string) {
 		for _, value := range arg {
 			errs += fmt.Sprintf("[%s]", value)
 		}
-		errs += fmt.Sprintf("\npanic recovered:n%s\n%s\n\n", err, stack(3))
+		errs += fmt.Sprintf("\npanic recovered:n%s\n%s\n\n", err, stack(0))
 		fmt.Println("\n\n\x1b[31m" + errs + reset)
 		SendSlack(errs)
 	}
