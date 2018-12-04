@@ -34,11 +34,11 @@ func Recovery() gin.HandlerFunc {
 
 func Err(err interface{}, arg ...string) {
 	if err != nil {
-		errs := fmt.Sprintf("[%s][%s][Recovery]", ServiceName, config.GoEnv)
+		errs := fmt.Sprintf("[%s][%s]", ServiceName, config.GoEnv)
 		for _, value := range arg {
 			errs += fmt.Sprintf("[%s]", value)
 		}
-		errs += fmt.Sprintf("\n panic recovered:\n%s\n%s\n\n", err, stack(1))
+		errs += fmt.Sprintf("\n\n\n Err recovered:\n%s\n%s\n\n", err, stack(1))
 		fmt.Println("\n\n\x1b[31m" + errs + reset)
 		SendSlack(errs)
 	}
