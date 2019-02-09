@@ -34,7 +34,7 @@ func SendSlack(msg string) {
 	client.Do(req)
 }
 
-func SendSlack(msg, channel string) {
+func SendSlackWithChan(msg, channel string) {
 	payload := map[string]interface{}{
 		"text": msg,
 		"channel": channel,
