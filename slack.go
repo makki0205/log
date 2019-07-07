@@ -36,9 +36,29 @@ func SendSlack(msg string) {
 
 func SendSlackWithChan(msg, channel string) {
 	payload := map[string]interface{}{
-		"text": msg,
+		"text":    msg,
 		"channel": channel,
 	}
+	str, err := json.Marshal(payload)
+	if err != nil {
+		return
+	}
+	values := url.Values{}
+	values.Set("payload", string(str))
+
+	req, _ := http.NewRequest(
+		"POST",
+		SlackURL,
+		strings.NewReader(values.Encode()),
+	)
+
+	// Content-Type 設定
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	client := &http.Client{}
+	client.Do(req)
+}
+
+func SendSlackWithPayload(payload map[string]interface{}) {
 	str, err := json.Marshal(payload)
 	if err != nil {
 		return
